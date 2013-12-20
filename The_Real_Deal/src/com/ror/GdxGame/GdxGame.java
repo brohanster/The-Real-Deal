@@ -8,7 +8,7 @@ public class GdxGame extends Game {
 	
 	@Override
 	public void create() {		
-		this.setScreen(new MainMenuScreen());
+		//this.setScreen(new MainMenuScreen());
 	}
 
 	@Override
