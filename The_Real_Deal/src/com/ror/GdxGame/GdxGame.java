@@ -5,10 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 
 public class GdxGame extends Game {
-	
 	@Override
 	public void create() {		
-		this.setScreen(new MainMenuScreen());
+		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
