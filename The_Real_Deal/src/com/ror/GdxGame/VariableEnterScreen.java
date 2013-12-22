@@ -23,16 +23,7 @@ public class VariableEnterScreen implements Screen{
 	public static CheckBox resistanceBoxYes, resistanceBoxNo;
 	public static SelectBox objectBox, planetBox;
 	TextButton goButton;
-	public VariableEnterScreen(final GdxGame gam){
-		String objects[] = new String[5];//figure out number lata
-		objects[0] = "cannonball";
-		objects[1] = "car";
-		
-		String planets[] = new String[5];//again figure it out later
-		planets[0] = "earth";
-		planets[1] = "mars";
-		planets[2] = "jupiter";
-		
+	public VariableEnterScreen(final GdxGame gam){		
 		game = gam;
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
