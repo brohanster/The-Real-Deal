@@ -2,6 +2,7 @@ package com.ror.GdxGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -27,10 +28,28 @@ public class VariableEnterScreen implements Screen{
 		table.setFillParent(true);
 		s = new Skin(Gdx.files.internal("uiskin.json"));
 		
+		Label l = new Label("herro", s);
+		
+		objectLabel = new Label("What object to launch?", s);
+		velocityLabel = new Label("What exit velocity?", s);
+		angleLabel = new Label("What angle to launch?", s);
+		planetLabel = new Label("Launch on which planet?", s);
+		resistanceLabel = new Label("Enable air resistance?", s);
+		
+		velocityField = new TextField("Enter Velocity (m/s)", s);
+		angleField = new TextField("Enter Angle (degrees)", s);
+		
+		
+		
+		table.add(l);
+		stage.addActor(table);
 	}
 	@Override
 	public void render(float delta) {
 		
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
 	}
 
 	@Override
