@@ -28,7 +28,7 @@ public class VariableEnterScreen implements Screen{
 	public static CheckBox resistanceBoxYes, resistanceBoxNo;
 	public static SelectBox objectBox, planetBox;
 	Dialog velocityNumWrong, velocityNotNum, angleNotNum, angleNumWrong, resistanceIssue;
-	TextButton goButton;
+	TextButton goButton, backButton;
 	public VariableEnterScreen(final GdxGame gam){		
 		game = gam;
 		stage = new Stage();
@@ -43,6 +43,13 @@ public class VariableEnterScreen implements Screen{
 		TextButton okVW = new TextButton("ok", s);
 		TextButton okVN = new TextButton("ok", s);
 		TextButton okRI = new TextButton("ok", s);
+		backButton = new TextButton("Back", s);
+		backButton.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		game.setScreen(new MainMenuScreen(game));
+        		return true;
+        	}
+        });
 		okAW.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){        		
         		angleNumWrong.hide();
@@ -78,13 +85,13 @@ public class VariableEnterScreen implements Screen{
         		if(!isNumeric(velocityField.getText())){
         			velocityNotNum.show(stage);
         			return true;
-        		}
-        		if(!isNumeric(angleField.getText())){
-        			angleNotNum.show(stage);        			
-        			return true;
         		}        		
         		if(Integer.parseInt(velocityField.getText()) > 100 || Integer.parseInt(velocityField.getText()) < 0){
         			velocityNumWrong.show(stage);
+        			return true;
+        		}
+        		if(!isNumeric(angleField.getText())){
+        			angleNotNum.show(stage);        			
         			return true;
         		}
         		if(Integer.parseInt(angleField.getText()) > 90 || Integer.parseInt(angleField.getText()) < 0){
@@ -157,6 +164,7 @@ public class VariableEnterScreen implements Screen{
 		table.add(resistanceBoxNo);
 		table.row();
 		table.add(goButton).colspan(3).width(200);
+		table.add(backButton).colspan(3).width(200);
 		stage.addActor(table);
 	}
 	public static boolean isNumeric(String str)
@@ -164,9 +172,9 @@ public class VariableEnterScreen implements Screen{
 	  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 	@Override
-	public void render(float delta) {
-		
+	public void render(float delta) {		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		//draw the background here
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();        
 	}

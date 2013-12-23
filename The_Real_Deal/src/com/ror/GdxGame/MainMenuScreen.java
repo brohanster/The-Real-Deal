@@ -14,8 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 public class MainMenuScreen implements Screen{
 	
 	Table t;
-	TextButton simulatorChoice;
-	TextButton gameChoice;
+	TextButton simulatorChoice, gameChoice, exitButton;
 	Label welcome;
 	Skin s;
 	final GdxGame game;
@@ -42,6 +41,14 @@ public class MainMenuScreen implements Screen{
         		return true;
         	}
         });
+		exitButton = new TextButton("Exit", s);
+		exitButton.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		Gdx.app.exit();
+        		return true;
+        	}
+        });
+		
 		welcome = new Label("Welcome to Projectile Motion!", s);
 		t.add(welcome).expandY();
 		t.row();
@@ -49,6 +56,7 @@ public class MainMenuScreen implements Screen{
 		t.row();
 		t.add(gameChoice).width(300).height(75);
 		t.row();
+		t.add(exitButton).width(300).height(50);
 		
 		stage.addActor(t);
 	}
