@@ -3,10 +3,11 @@ package com.ror.GdxGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -15,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class VariableEnterScreen implements Screen{
 
@@ -29,6 +29,8 @@ public class VariableEnterScreen implements Screen{
 	public static SelectBox objectBox, planetBox;
 	Dialog velocityNumWrong, velocityNotNum, angleNotNum, angleNumWrong, resistanceIssue;
 	TextButton goButton, backButton;
+	Texture background;
+	SpriteBatch batch;
 	public VariableEnterScreen(final GdxGame gam){		
 		game = gam;
 		stage = new Stage();
@@ -36,6 +38,9 @@ public class VariableEnterScreen implements Screen{
 		table = new Table();
 		table.setFillParent(true);
 		s = new Skin(Gdx.files.internal("uiskin.json"));
+		Texture.setEnforcePotImages(false);
+		background = new Texture(Gdx.files.internal("wallpaper.jpg"));
+		batch = new SpriteBatch();
 		
 		goButton = new TextButton("Ready?", s);
 		TextButton okAW = new TextButton("ok", s);
@@ -164,6 +169,7 @@ public class VariableEnterScreen implements Screen{
 		table.add(resistanceBoxNo);
 		table.row();
 		table.add(goButton).colspan(3).width(200);
+		table.row();
 		table.add(backButton).colspan(3).width(200);
 		stage.addActor(table);
 	}
@@ -172,9 +178,10 @@ public class VariableEnterScreen implements Screen{
 	  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 	@Override
-	public void render(float delta) {		
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		//draw the background here
+	public void render(float delta) {
+		batch.begin();
+		batch.draw(background, 0,0);
+		batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();        
 	}
