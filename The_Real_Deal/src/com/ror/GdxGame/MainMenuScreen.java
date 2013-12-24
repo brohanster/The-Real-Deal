@@ -24,6 +24,7 @@ public class MainMenuScreen implements Screen{
 	Texture background;
 	SpriteBatch batch;
 	public MainMenuScreen(final GdxGame gam){
+		Texture.setEnforcePotImages(false);
 		game = gam;
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
@@ -69,7 +70,7 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void render(float delta) {		
 		batch.begin();
-		//batch.draw(background, 0,0);
+		batch.draw(background, 0,0);
 		batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
