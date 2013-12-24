@@ -3,6 +3,8 @@ package com.ror.GdxGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +21,8 @@ public class MainMenuScreen implements Screen{
 	Skin s;
 	final GdxGame game;
 	Stage stage;
+	Texture background;
+	SpriteBatch batch;
 	public MainMenuScreen(final GdxGame gam){
 		game = gam;
 		stage = new Stage();
@@ -26,7 +30,8 @@ public class MainMenuScreen implements Screen{
 		t = new Table();
 		t.setFillParent(true);
 		s = new Skin(Gdx.files.internal("uiskin.json"));
-		
+		background = new Texture(Gdx.files.internal("wallpaper.jpg"));
+		batch = new SpriteBatch();
 		simulatorChoice = new TextButton("Run the Simulator!", s);
 		simulatorChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
@@ -63,7 +68,9 @@ public class MainMenuScreen implements Screen{
 	
 	@Override
 	public void render(float delta) {		
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		//batch.draw(background, 0,0);
+		batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 	}

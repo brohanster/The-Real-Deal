@@ -36,16 +36,15 @@ public class SimulationScreen implements Screen{
 		
 	}
 	public void compute(){
-		
-	}
-	/*
+		xVel = (float) Math.cos(velocity);
+		yVel = (float) Math.sin(velocity);
+	}	
 	public float x(float time){
-		
+		return time * xVel;
 	}
 	public float y(float time){
-		
+		return (yVel * time) - (0.5f * gravity * (time * time));
 	}
-	*/
 	@Override
 	public void render(float delta) {
 		
