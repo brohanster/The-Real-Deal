@@ -25,7 +25,8 @@ public class SimulationScreen implements Screen{
 	float angle, velocity, xVel, yVel, deltaTime, gravity, mult, eqTime;
 	int count;
 	Dialog retry;
-	TextButton newVar, redo, main;
+	boolean started;
+	TextButton newVar, redo, main, start;
 	Label height, distance;
 	Skin s;
 	Stage stage;
@@ -34,6 +35,7 @@ public class SimulationScreen implements Screen{
 		game = gam;
 		retrieveInfo();		
 		compute();
+		started = false;
 		Texture.setEnforcePotImages(false);
 		stage = new Stage();
 		batch = new SpriteBatch();
@@ -50,6 +52,14 @@ public class SimulationScreen implements Screen{
 		table.setFillParent(true);
 		
 		//retry = new Dialog("Simulation over!", s);
+		start = new TextButton("Start!", s);
+		start.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		started = true;       
+        		deltaTime = TimeUtils.nanoTime();
+        		return true;
+        	}
+        });
 		newVar = new TextButton("New Variables", s);
 		newVar.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
@@ -62,7 +72,6 @@ public class SimulationScreen implements Screen{
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		deltaTime = TimeUtils.nanoTime();
         		count = 0;
-        		retry.hide();
         		return true;
         	}
         });
@@ -79,6 +88,7 @@ public class SimulationScreen implements Screen{
 		retry.add(main);
 		*/
 		table.top();
+		table.add(start).width(150);
 		table.add("Options: ").width(100);
 		table.add(newVar);
 		table.add(redo);
@@ -86,7 +96,6 @@ public class SimulationScreen implements Screen{
 		table.add(height).width(100);
 		table.add(distance).width(100);
 		stage.addActor(table);
-		deltaTime = TimeUtils.nanoTime();
 	}
 	public void retrieveInfo(){
 		angle = Float.parseFloat(VariableEnterScreen.angleField.getText());
@@ -148,8 +157,10 @@ public class SimulationScreen implements Screen{
         eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
         //draw the launched and launcher and background here    	   
         batch.begin();
-        if(y(eqTime) > 0)
-        	batch.draw(projectile, mult * x(eqTime), mult * y(eqTime));
+        if(started)
+        	if(y(eqTime) > 0)
+        		batch.draw(projectile, mult * x(eqTime), mult * y(eqTime));
+        
         batch.end();
 		stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();  
