@@ -27,7 +27,7 @@ public class VariableEnterScreen implements Screen{
 	public static TextField velocityField, angleField;
 	public static CheckBox resistanceBoxYes, resistanceBoxNo;
 	public static SelectBox objectBox, planetBox;
-	Dialog velocityNumWrong, velocityNotNum, angleNotNum, angleNumWrong, resistanceIssue;
+	Dialog velocityNumWrong, velocityNotNum, angleNotNum, angleNumWrong, resistanceIssue, resistancePlanet;
 	TextButton goButton, backButton;
 	Texture background;
 	SpriteBatch batch;
@@ -48,6 +48,7 @@ public class VariableEnterScreen implements Screen{
 		TextButton okVW = new TextButton("ok", s);
 		TextButton okVN = new TextButton("ok", s);
 		TextButton okRI = new TextButton("ok", s);
+		TextButton okRP = new TextButton("ok", s);
 		backButton = new TextButton("Back", s);
 		backButton.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
@@ -85,6 +86,12 @@ public class VariableEnterScreen implements Screen{
         		return true;
         	}
         });
+		okRP.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){        		
+        		resistancePlanet.hide();
+        		return true;
+        	}
+        });
 		goButton.addListener(new InputListener(){			
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		if(!isNumeric(velocityField.getText())){
@@ -111,6 +118,10 @@ public class VariableEnterScreen implements Screen{
         			resistanceIssue.show(stage);
         			return true;
         		}
+        		if(resistanceBoxYes.isChecked() && !planetBox.getSelection().equals("earth")){
+        			resistancePlanet.show(stage);
+        			return true;
+        		}
         		if(resistanceBoxYes.isChecked()){
         			game.setScreen(new AirResistanceSimulatorScreen(game));
         			return true;
@@ -128,12 +139,14 @@ public class VariableEnterScreen implements Screen{
 		angleNumWrong = new Dialog("Angle must be between 1-89", s);
 		angleNotNum = new Dialog("Please enter a number for angle", s);
 		resistanceIssue = new Dialog("Please check 1 resistance option", s);
+		resistancePlanet = new Dialog("Air resistance is only eligible on earth", s);
 		
 		velocityNotNum.add(okVN).width(300);	
 		velocityNumWrong.add(okVW).width(300);
 		angleNumWrong.add(okAW).width(300);
 		angleNotNum.add(okAN).width(300);
 		resistanceIssue.add(okRI).width(300);
+		resistancePlanet.add(okRP).width(300);
 		
 		objectLabel = new Label("What object to launch?", s);
 		velocityLabel = new Label("What exit velocity (m/s)?", s);
@@ -148,7 +161,7 @@ public class VariableEnterScreen implements Screen{
 		resistanceBoxNo = new CheckBox("No", s);
 		
 		objectBox = new SelectBox(new String[]{"car", "cannonball"}, s);
-		planetBox = new SelectBox(new String[]{"earth", "mars"}, s);
+		planetBox = new SelectBox(new String[]{"earth", "mars", "moon"}, s);
 		
 		table.add(objectLabel);
 		table.add(objectBox).width(200);
