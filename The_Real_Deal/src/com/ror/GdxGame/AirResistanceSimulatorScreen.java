@@ -97,15 +97,22 @@ public class AirResistanceSimulatorScreen implements Screen{
 		velocity = Float.parseFloat(VariableEnterScreen.velocityField.getText());
 		if(VariableEnterScreen.objectBox.getSelection().equals("car")){
 			projectile = new Texture(Gdx.files.internal("droplet.png"));
+			coeDrag = .23f;
+			mass = 1670;
+			area = (float)(Math.PI * 1.25 * 1.25);			
+		}
+		else if(VariableEnterScreen.objectBox.getSelection().equals("human")){
+			projectile = new Texture(Gdx.files.internal("droplet.png"));
+			coeDrag = .04f;
+			mass = 60;
+			area = 1.9f;
 		}
 		else if(VariableEnterScreen.objectBox.getSelection().equals("cannonball")){
 			//projectile = cannonball image
 			projectile = new Texture(Gdx.files.internal("droplet.png"));
-			mass = 5.4f;
+			mass = 18.9f;
 			coeDrag = .48f;
-			area = (float)(Math.PI * 2.2 * 2.2);
-			
-			
+			area = (float)(Math.PI * .084 * .084);			
 		}
 		
 	}
@@ -145,7 +152,8 @@ public class AirResistanceSimulatorScreen implements Screen{
 		//ask about the use of xVel, and instantaneous velocity
 		float first = (terminalVelocity * terminalVelocity)/gravity;
 		float inside = ((terminalVelocity * terminalVelocity) + gravity * xVel * time)/(terminalVelocity * terminalVelocity);
-		distance.setText("Distance: " + first * (float)Math.log(inside));
+		if(y(time) > 0)
+			distance.setText("Distance: " + (int)(first * (float)Math.log(inside)));
 		return first * (float)Math.log(inside);
 	}
 	public float instantY(float time){
@@ -157,8 +165,9 @@ public class AirResistanceSimulatorScreen implements Screen{
 		float first = (terminalVelocity * terminalVelocity)/(2 * gravity);
 		float num = (yVel * yVel) + (terminalVelocity * terminalVelocity);
 		float denum = (instantY(time) * instantY(time)) + (terminalVelocity * terminalVelocity);
-		height.setText("Height: " + first * (float)Math.log(num/denum));
-		return first * (float)Math.log(num/denum);
+		if((first * (float)Math.log(num/denum)) > 0)
+			height.setText("Height: " + (int)(first * (float)Math.log(num/denum)));
+		return (first * (float)Math.log(num/denum));
 		
 		
 	}

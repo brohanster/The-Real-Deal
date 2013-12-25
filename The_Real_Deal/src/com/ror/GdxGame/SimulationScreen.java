@@ -40,7 +40,7 @@ public class SimulationScreen implements Screen{
 		Gdx.input.setInputProcessor(stage);
 		height = new Label("", s);
 		distance = new Label("", s);
-		
+		findMultEarth();
 		table = new Table();
 		table.setSkin(s);
 		table.setFillParent(true);
@@ -90,7 +90,10 @@ public class SimulationScreen implements Screen{
 			projectile = new Texture(Gdx.files.internal("droplet.png"));
 		}
 		else if(VariableEnterScreen.objectBox.getSelection().equals("cannonball")){
-			//projectile = cannonball image
+			projectile = new Texture(Gdx.files.internal("droplet.png"));
+		}
+		else if(VariableEnterScreen.objectBox.getSelection().equals("human")){
+			projectile = new Texture(Gdx.files.internal("droplet.png"));
 		}
 		if(VariableEnterScreen.planetBox.getSelection().equals("earth")){
 			gravity = 9.8f;

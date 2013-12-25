@@ -160,7 +160,7 @@ public class VariableEnterScreen implements Screen{
 		resistanceBoxYes = new CheckBox("Yes", s);
 		resistanceBoxNo = new CheckBox("No", s);
 		
-		objectBox = new SelectBox(new String[]{"car", "cannonball"}, s);
+		objectBox = new SelectBox(new String[]{"car", "cannonball", "human"}, s);
 		planetBox = new SelectBox(new String[]{"earth", "mars", "moon"}, s);
 		
 		table.add(objectLabel);
