@@ -21,10 +21,7 @@ public class SimulationScreen implements Screen{
 	final GdxGame game;
 	Texture projectile, launcher;
 	SpriteBatch batch;
-	OrthographicCamera cam;
 	float angle, velocity, xVel, yVel, deltaTime, gravity, mult, eqTime;
-	int count;
-	Dialog retry;
 	boolean started;
 	TextButton newVar, redo, main, start;
 	Label height, distance;
@@ -39,9 +36,6 @@ public class SimulationScreen implements Screen{
 		Texture.setEnforcePotImages(false);
 		stage = new Stage();
 		batch = new SpriteBatch();
-		//cam = new OrthographicCamera();
-		//cam.setToOrtho(false, 800, 480);
-		//batch.setProjectionMatrix(cam.combined);
 		s = new Skin(Gdx.files.internal("uiskin.json"));
 		Gdx.input.setInputProcessor(stage);
 		height = new Label("", s);
@@ -50,8 +44,6 @@ public class SimulationScreen implements Screen{
 		table = new Table();
 		table.setSkin(s);
 		table.setFillParent(true);
-		
-		//retry = new Dialog("Simulation over!", s);
 		start = new TextButton("Start!", s);
 		start.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
@@ -71,7 +63,6 @@ public class SimulationScreen implements Screen{
 		redo.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		deltaTime = TimeUtils.nanoTime();
-        		count = 0;
         		return true;
         	}
         });
@@ -82,11 +73,6 @@ public class SimulationScreen implements Screen{
         		return true;
         	}
         });
-		/*
-		retry.add(newVar);
-		retry.add(redo);
-		retry.add(main);
-		*/
 		table.top();
 		table.add(start).width(150);
 		table.add("Options: ").width(100);
@@ -186,13 +172,11 @@ public class SimulationScreen implements Screen{
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
