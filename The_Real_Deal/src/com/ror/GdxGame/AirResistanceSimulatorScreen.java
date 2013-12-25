@@ -21,7 +21,7 @@ public class AirResistanceSimulatorScreen implements Screen{
 	Table table;
 	Skin s;
 	TextButton newVar, redo, main, start;
-	float deltaTime, eqTime;
+	float k, deltaTime, eqTime, angle, velocity, xVel, yVel, mult, mass, densAir, coeDrag, gravity, area, terminalVelocity;
 	Texture projectile, launcher;
 	Label height, distance;
 	SpriteBatch batch;
@@ -30,6 +30,13 @@ public class AirResistanceSimulatorScreen implements Screen{
 		game = gam;
 		stage = new Stage();
 		table = new Table();
+		retrieveInfo();
+		compute();
+		findMultEarth();
+		densAir = 1.204f;
+		gravity = 9.8f;
+		k = .0431f;
+		terminalVelocity = terminalVelocity();
 		Texture.setEnforcePotImages(false);
 		batch = new SpriteBatch();
 		Gdx.input.setInputProcessor(stage);
@@ -79,6 +86,34 @@ public class AirResistanceSimulatorScreen implements Screen{
 		stage.addActor(table);
 		
 	}
+	public float terminalVelocity(){
+		float num = 2 * mass * gravity;
+		float denom = densAir * area * coeDrag;
+		float quo = num / denom;
+		return (float)Math.sqrt(quo);
+	}
+	public void retrieveInfo(){
+		angle = Float.parseFloat(VariableEnterScreen.angleField.getText());
+		velocity = Float.parseFloat(VariableEnterScreen.velocityField.getText());
+		if(VariableEnterScreen.objectBox.getSelection().equals("car")){
+			projectile = new Texture(Gdx.files.internal("droplet.png"));
+		}
+		else if(VariableEnterScreen.objectBox.getSelection().equals("cannonball")){
+			//projectile = cannonball image
+			projectile = new Texture(Gdx.files.internal("droplet.png"));
+			mass = 5.4f;
+			coeDrag = .48f;
+			area = (float)(Math.PI * 2.2 * 2.2);
+			
+			
+		}
+		
+	}
+	public void compute(){
+		angle = (angle*(float)Math.PI)/180;
+		xVel = (float) Math.cos(angle)*velocity;
+		yVel = (float) Math.sin(angle)*velocity;
+	}
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -86,15 +121,47 @@ public class AirResistanceSimulatorScreen implements Screen{
         eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
         //draw the launched and launcher and background here    	   
         batch.begin();
-        //if(started)
-        	//if(y(eqTime) > 0)
-        		//batch.draw(projectile, mult * x(eqTime), mult * y(eqTime));
+        if(started)
+        	if(y(eqTime) > 0)
+        		batch.draw(projectile, x(eqTime), y(eqTime));
         
         batch.end();
 		stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();  
 	}
-	
+	public void findMultEarth(){
+		if(velocity <= 10)
+			mult = 60f;
+		else if(velocity > 10 && velocity <= 20)
+			mult = 20f;
+		else if(velocity > 20 && velocity <= 40)
+			mult = 5f;
+		else if(velocity > 40 && velocity <= 80)
+			mult = 1.1f;
+		else
+			mult = .9f;			
+	}
+	public float x(float time){
+		//ask about the use of xVel, and instantaneous velocity
+		float first = (terminalVelocity * terminalVelocity)/gravity;
+		float inside = ((terminalVelocity * terminalVelocity) + gravity * xVel * time)/(terminalVelocity * terminalVelocity);
+		distance.setText("Distance: " + first * (float)Math.log(inside));
+		return first * (float)Math.log(inside);
+	}
+	public float instantY(float time){
+		float num = yVel - (terminalVelocity * (float)Math.tan((time * gravity)/terminalVelocity));
+		float denom = terminalVelocity + (yVel * (float)Math.tan((time * gravity)/terminalVelocity));
+		return terminalVelocity * (num / denom);
+	}
+	public float y(float time){		
+		float first = (terminalVelocity * terminalVelocity)/(2 * gravity);
+		float num = (yVel * yVel) + (terminalVelocity * terminalVelocity);
+		float denum = (instantY(time) * instantY(time)) + (terminalVelocity * terminalVelocity);
+		height.setText("Height: " + first * (float)Math.log(num/denum));
+		return first * (float)Math.log(num/denum);
+		
+		
+	}
 	@Override
 	public void resize(int width, int height) {
 		
