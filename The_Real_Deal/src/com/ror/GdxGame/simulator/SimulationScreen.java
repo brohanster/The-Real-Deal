@@ -1,48 +1,48 @@
-package com.ror.GdxGame;
+package com.ror.GdxGame.simulator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.ror.GdxGame.GdxGame;
+import com.ror.GdxGame.MainMenuScreen;
 
-public class AirResistanceSimulatorScreen implements Screen{
+public class SimulationScreen implements Screen{
 
 	final GdxGame game;
+	Texture projectile, launcher;
+	SpriteBatch batch;
+	float angle, velocity, xVel, yVel, deltaTime, gravity, mult, eqTime;
+	boolean started;
+	TextButton newVar, redo, main, start;
+	Label height, distance;
+	Skin s;
 	Stage stage;
 	Table table;
-	Skin s;
-	TextButton newVar, redo, main, start;
-	float k, deltaTime, eqTime, angle, velocity, xVel, yVel, mult, mass, densAir, coeDrag, gravity, area, terminalVelocity;
-	Texture projectile, launcher;
-	Label height, distance;
-	SpriteBatch batch;
-	boolean started;
-	public AirResistanceSimulatorScreen(final GdxGame gam){
+	public SimulationScreen(final GdxGame gam){
 		game = gam;
-		stage = new Stage();
-		table = new Table();
-		retrieveInfo();
+		retrieveInfo();		
 		compute();
-		findMultEarth();
-		densAir = 1.204f;
-		gravity = 9.8f;
-		k = .0431f;
-		terminalVelocity = terminalVelocity();
+		started = false;
 		Texture.setEnforcePotImages(false);
+		stage = new Stage();
 		batch = new SpriteBatch();
-		Gdx.input.setInputProcessor(stage);
 		s = new Skin(Gdx.files.internal("uiskin.json"));
+		Gdx.input.setInputProcessor(stage);
 		height = new Label("", s);
-		distance = new Label("", s);		
+		distance = new Label("", s);
+		findMultEarth();
 		table = new Table();
 		table.setSkin(s);
 		table.setFillParent(true);
@@ -84,35 +84,30 @@ public class AirResistanceSimulatorScreen implements Screen{
 		table.add(height).width(100);
 		table.add(distance).width(100);
 		stage.addActor(table);
-		
-	}
-	public float terminalVelocity(){
-		float num = 2 * mass * gravity;
-		float denom = densAir * area * coeDrag;
-		float quo = num / denom;
-		return (float)Math.sqrt(quo);
 	}
 	public void retrieveInfo(){
 		angle = Float.parseFloat(VariableEnterScreen.angleField.getText());
 		velocity = Float.parseFloat(VariableEnterScreen.velocityField.getText());
 		if(VariableEnterScreen.objectBox.getSelection().equals("car")){
 			projectile = new Texture(Gdx.files.internal("droplet.png"));
-			coeDrag = .23f;
-			mass = 1670;
-			area = (float)(Math.PI * 1.25 * 1.25);			
+		}
+		else if(VariableEnterScreen.objectBox.getSelection().equals("cannonball")){
+			projectile = new Texture(Gdx.files.internal("droplet.png"));
 		}
 		else if(VariableEnterScreen.objectBox.getSelection().equals("human")){
 			projectile = new Texture(Gdx.files.internal("droplet.png"));
-			coeDrag = .04f;
-			mass = 60;
-			area = 1.9f;
 		}
-		else if(VariableEnterScreen.objectBox.getSelection().equals("cannonball")){
-			//projectile = cannonball image
-			projectile = new Texture(Gdx.files.internal("droplet.png"));
-			mass = 18.9f;
-			coeDrag = .48f;
-			area = (float)(Math.PI * .084 * .084);			
+		if(VariableEnterScreen.planetBox.getSelection().equals("earth")){
+			gravity = 9.8f;
+			findMultEarth();
+		}
+		else if(VariableEnterScreen.planetBox.getSelection().equals("mars")){
+			gravity = 3.711f;
+			mult = 1f;
+		}
+		else if(VariableEnterScreen.planetBox.getSelection().equals("moon")){
+			gravity = 1.622f;
+			mult = 1f;
 		}
 		
 	}
@@ -120,21 +115,19 @@ public class AirResistanceSimulatorScreen implements Screen{
 		angle = (angle*(float)Math.PI)/180;
 		xVel = (float) Math.cos(angle)*velocity;
 		yVel = (float) Math.sin(angle)*velocity;
+	}	
+	public float x(float time){
+		float dist = time*xVel;
+		if(y(time) > 0)
+			distance.setText("Distance: " + (int)dist);
+		return dist;		
 	}
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-        eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
-        //draw the launched and launcher and background here    	   
-        batch.begin();
-        if(started)
-        	if(y(eqTime) > 0)
-        		batch.draw(projectile, x(eqTime), y(eqTime));
-        
-        batch.end();
-		stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();  
+	public float y(float time){
+		float hei = ((yVel * time) - (0.5f * gravity * (time * time)));
+		if(hei > 0)
+			height.setText("Height: " + (int)hei);
+		
+		return hei;
 	}
 	public void findMultEarth(){
 		if(velocity <= 10)
@@ -148,31 +141,25 @@ public class AirResistanceSimulatorScreen implements Screen{
 		else
 			mult = .9f;			
 	}
-	public float x(float time){
-		//ask about the use of xVel, and instantaneous velocity
-		float first = (terminalVelocity * terminalVelocity)/gravity;
-		float inside = ((terminalVelocity * terminalVelocity) + gravity * xVel * time)/(terminalVelocity * terminalVelocity);
-		if(y(time) > 0)
-			distance.setText("Distance: " + (int)(first * (float)Math.log(inside)));
-		return first * (float)Math.log(inside);
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
+        //draw the launched and launcher and background here    	   
+        batch.begin();
+        if(started)
+        	if(y(eqTime) > 0)
+        		batch.draw(projectile, mult * x(eqTime), mult * y(eqTime));
+        
+        batch.end();
+		stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();  
 	}
-	public float instantY(float time){
-		float num = yVel - (terminalVelocity * (float)Math.tan((time * gravity)/terminalVelocity));
-		float denom = terminalVelocity + (yVel * (float)Math.tan((time * gravity)/terminalVelocity));
-		return terminalVelocity * (num / denom);
-	}
-	public float y(float time){		
-		float first = (terminalVelocity * terminalVelocity)/(2 * gravity);
-		float num = (yVel * yVel) + (terminalVelocity * terminalVelocity);
-		float denum = (instantY(time) * instantY(time)) + (terminalVelocity * terminalVelocity);
-		if((first * (float)Math.log(num/denum)) > 0)
-			height.setText("Height: " + (int)(first * (float)Math.log(num/denum)));
-		return (first * (float)Math.log(num/denum));
-		
-		
-	}
+
 	@Override
 	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
 		
 	}
 
@@ -190,19 +177,16 @@ public class AirResistanceSimulatorScreen implements Screen{
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		
 	}
 

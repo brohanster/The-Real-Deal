@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.ror.GdxGame.physicsChallenge.ChallengeChoiceScreen;
+import com.ror.GdxGame.simulator.VariableEnterScreen;
 
 public class MainMenuScreen implements Screen{
 	
@@ -43,7 +45,7 @@ public class MainMenuScreen implements Screen{
 		gameChoice = new TextButton("Take the Physics Challenge!", s);
 		gameChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		//game.setScreen(new DisplayScreen(game));
+        		game.setScreen(new ChallengeChoiceScreen(game));
         		return true;
         	}
         });
