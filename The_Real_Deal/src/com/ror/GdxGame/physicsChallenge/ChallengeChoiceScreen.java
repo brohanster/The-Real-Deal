@@ -21,9 +21,10 @@ public class ChallengeChoiceScreen implements Screen{
 	Skin s;
 	Stage stage;
 	Table table;
-	TextButton backButton, angleChoice, velocityChoice, gravityChoice, distanceChoice;//We can add more, but ill leave it at this for now
+	TextButton backButton, angleChoice, velocityChoice, gravityChoice, distanceChoice, randomChoice;//We can add more, but ill leave it at this for now
 	SpriteBatch batch;
 	Texture background;
+	public static int challengeType;
 	public ChallengeChoiceScreen(final GdxGame gam){
 		game = gam;
 		stage = new Stage();
@@ -45,12 +46,14 @@ public class ChallengeChoiceScreen implements Screen{
 		angleChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		game.setScreen(new ChallengeDisplayScreen(game));
+        		challengeType = 1;
         		return true;
         	}
         });
 		velocityChoice = new TextButton("Velocity Challenge", s);
 		velocityChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		challengeType = 2;
         		game.setScreen(new ChallengeDisplayScreen(game));
         		return true;
         	}
@@ -59,6 +62,7 @@ public class ChallengeChoiceScreen implements Screen{
 		gravityChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		game.setScreen(new ChallengeDisplayScreen(game));
+        		challengeType = 3;
         		return true;
         	}
         });
@@ -66,6 +70,15 @@ public class ChallengeChoiceScreen implements Screen{
 		distanceChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		game.setScreen(new ChallengeDisplayScreen(game));
+        		challengeType = 4;
+        		return true;
+        	}
+        });
+		randomChoice = new TextButton("Random!", s);
+		randomChoice.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		game.setScreen(new ChallengeDisplayScreen(game));
+        		challengeType = 5;
         		return true;
         	}
         });
@@ -83,6 +96,8 @@ public class ChallengeChoiceScreen implements Screen{
 		table.add(gravityChoice).height(75).width(250);
 		table.row();
 		table.add(distanceChoice).height(75).width(250);
+		table.row();
+		table.add(randomChoice).height(75).width(250);
 		stage.addActor(table);
 	}
 	@Override
