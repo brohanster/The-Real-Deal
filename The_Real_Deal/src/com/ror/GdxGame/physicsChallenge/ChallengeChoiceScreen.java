@@ -21,7 +21,7 @@ public class ChallengeChoiceScreen implements Screen{
 	Skin s;
 	Stage stage;
 	Table table;
-	TextButton backButton, angleChoice, velocityChoice, gravityChoice, distanceChoice, randomChoice;//We can add more, but ill leave it at this for now
+	TextButton backButton, angleChoice, velocityChoice, gravityChoice, distanceChoice, heightChoice, randomChoice;//We can add more, but ill leave it at this for now
 	SpriteBatch batch;
 	Texture background;
 	public static int challengeType;
@@ -45,8 +45,8 @@ public class ChallengeChoiceScreen implements Screen{
 		angleChoice = new TextButton("Angle Challenge", s);
 		angleChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		game.setScreen(new ChallengeDisplayScreen(game));
         		challengeType = 1;
+        		game.setScreen(new ChallengeDisplayScreen(game));
         		return true;
         	}
         });
@@ -61,43 +61,53 @@ public class ChallengeChoiceScreen implements Screen{
 		gravityChoice = new TextButton("Gravity Challenge", s);
 		gravityChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		game.setScreen(new ChallengeDisplayScreen(game));
         		challengeType = 3;
+        		game.setScreen(new ChallengeDisplayScreen(game));
         		return true;
         	}
         });
 		distanceChoice = new TextButton("Distance Challenge", s);
 		distanceChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		game.setScreen(new ChallengeDisplayScreen(game));
         		challengeType = 4;
+        		game.setScreen(new ChallengeDisplayScreen(game));
+        		return true;
+        	}
+        });
+		heightChoice = new TextButton("Height Challenge", s);
+		heightChoice.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		challengeType = 5;
+        		game.setScreen(new ChallengeDisplayScreen(game));
         		return true;
         	}
         });
 		randomChoice = new TextButton("Random!", s);
 		randomChoice.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		challengeType = 6;
         		game.setScreen(new ChallengeDisplayScreen(game));
-        		challengeType = 5;
         		return true;
         	}
         });
 		table.setFillParent(true);
 		table.setSkin(s);
 		table.center();
-		table.add(challengeChoice);
+		table.add(challengeChoice).colspan(2);
 		table.row();
-		table.add(" ").height(75);
+		table.add(" ").height(60);
 		table.row();
-		table.add(angleChoice).height(75).width(250);
+		table.add(angleChoice).height(60).width(250);
+		//table.row();
+		table.add(velocityChoice).height(60).width(250);
 		table.row();
-		table.add(velocityChoice).height(75).width(250);
+		table.add(gravityChoice).height(60).width(250);
+		//table.row();
+		table.add(distanceChoice).height(60).width(250);
 		table.row();
-		table.add(gravityChoice).height(75).width(250);
-		table.row();
-		table.add(distanceChoice).height(75).width(250);
-		table.row();
-		table.add(randomChoice).height(75).width(250);
+		table.add(heightChoice).height(60).width(250);
+		//table.row();
+		table.add(randomChoice).height(60).width(250);
 		stage.addActor(table);
 	}
 	@Override

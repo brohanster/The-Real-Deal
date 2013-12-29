@@ -23,7 +23,7 @@ public class ChallengeDisplayScreen implements Screen{
 	//i want a different background for this screen/branch
 	final GdxGame game;
 	static int challengeType;//1 = angle, 2 = velocity, 3 = gravity, 4= distance, 5= random
-	int answer;//use a +- of like 5 to accept a variety of answers
+	double answer;//use a +- of like 5 to accept a variety of answers
 	Label title, info1, info2, info3, info4, inputLabel;
 	String titleL, info1L, info2L, info3L, info4L;
 	TextField input;
@@ -51,7 +51,9 @@ public class ChallengeDisplayScreen implements Screen{
 		testAnswer = new TextButton("Check your answer", s);
 		testAnswer.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		
+        		if(Integer.parseInt(input.getText()) > answer - 3 && Integer.parseInt(input.getText()) < answer + 3){
+        			//go to simulator
+        		}
         		return true;
         	}
         });
@@ -74,7 +76,7 @@ public class ChallengeDisplayScreen implements Screen{
 		table.row();
 		table.add(input);
 		table.row();
-		table.add(testAnswer);
+		table.add(testAnswer).width(150).height(35);
 		stage.addActor(table);
 		
 	}
@@ -94,9 +96,33 @@ public class ChallengeDisplayScreen implements Screen{
 		if(ChallengeChoiceScreen.challengeType == 4||challengeType == 4){
 			spawnDistanceProblem();
 		}
+		if(ChallengeChoiceScreen.challengeType == 5||challengeType == 5){
+			spawnHeightProblem();
+		}
 	}
 	public void spawnAngleProblem(){
-		
+		//give exit velocity, 
+		//distance, max height, or 
+		answer = randGen.nextInt(80) + 10;
+		int exitVel = randGen.nextInt(65) + 10;
+		gravity = 10;//ease of calculation
+		int variant = randGen.nextInt(2) + 1;
+		titleL = "Find the exit velocity: ";
+		info1L = "The exit velocity is " + exitVel + " m/s";
+		info2L = "Assume gravity is 10 m/s";
+		double angleRad = (answer * Math.PI/180);
+		double xVel = Math.cos(angleRad) * exitVel;
+		double yVel = Math.sin(angleRad) * exitVel;
+		time = yVel/gravity;
+		info4L = "The total time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
+		if(variant == 1){//given distance of flight			
+			distance = (int)(time * xVel);
+			info3L = "The particle distance is " + distance + " meters";
+		}
+		if(variant == 2){//given max height
+			int maxHeight = (int)(yVel * (time/2) - 4.9 * ((time * time)/4));
+			info3L = "The particle's max height is " + maxHeight + " meters";
+		}
 	}
 	public void spawnVelocityProblem(){
 		//finding exit velocity
@@ -105,29 +131,66 @@ public class ChallengeDisplayScreen implements Screen{
 		angle = randGen.nextInt(80) + 10;
 		answer = randGen.nextInt(65) + 10;
 		gravity = 10;//ease of calculation
-		int variant = 1;//randGen.nextInt(1) + 1;
+		int variant = randGen.nextInt(2) + 1;
 		titleL = "Find the exit velocity: ";
 		info1L = "The angle is " + angle + " degrees";
 		info2L = "Assume gravity is 10 m/s";
-		if(variant == 1){//give distance of flight
-			double angleRad = (angle * Math.PI/180);
-			double xVel = Math.cos(angleRad) * answer;
-			double yVel = Math.sin(angleRad) * answer;
-			time = yVel/gravity;
+		double angleRad = (angle * Math.PI/180);
+		double xVel = Math.cos(angleRad) * answer;
+		double yVel = Math.sin(angleRad) * answer;
+		time = yVel/gravity;
+		info4L = "The total time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
+		if(variant == 1){//given distance of flight			
 			distance = (int)(time * xVel);
 			info3L = "The particle distance is " + distance + " meters";
-			info4L = "The time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
 		}
-		if(variant == 2){//give max height
-			
+		if(variant == 2){//given max height
+			int maxHeight = (int)(yVel * (time/2) - 4.9 * ((time * time)/4));
+			info3L = "The particle's max height is " + maxHeight + " meters";
 		}
 		
 	}
 	public void spawnGravityProblem(){
-		
+		double temp = randGen.nextDouble()*10;
+		answer = Double.valueOf(new DecimalFormat("#.##").format(temp));
+		//so easiest way to get a good problem would be to give the y value at a given time t, and give velocity and angle
+		int exitVel = randGen.nextInt(40) + 10;
+		angle = randGen.nextInt(80) + 10;
+		double angleRad = angle * Math.PI /180;
+		double yVel = exitVel * Math.sin(angleRad);
+		double time = Double.valueOf(new DecimalFormat("#.##").format(randGen.nextDouble() * 3));
+		double tempY = (yVel * time) + (.5 * answer * (time * time));
+		double y = Double.valueOf(new DecimalFormat("#.##").format(tempY));
+		titleL = "Find the acceleration of gravity: ";
+		info1L = "The exit velocity is " + exitVel + " m/s";
+		info2L = "The angle of launch is " + angle + " degrees";
+		info3L = "The height at time " + time + " seconds is " + y + " meters";
 	}
 	public void spawnDistanceProblem(){
+		angle = randGen.nextInt(80) + 10;
+		int exitVel = randGen.nextInt(60) + 10;
+		titleL = "Find the distance the particle will go:";
+		info1L = "The angle of launch is " + angle + " degrees";
+		info2L = "The exit velocity is " + exitVel + " m/s";
+		info3L = "Assume gravity is 10 m/s";
+		double angleRad = angle * Math.PI / 180;
+		double xVel = exitVel * Math.cos(angleRad);
+		double yVel = Math.sin(angleRad) * answer;
+		time = yVel/10;
+		answer = Double.valueOf(new DecimalFormat("#.##").format(xVel * time));
 		
+	}
+	public void spawnHeightProblem(){
+		angle = randGen.nextInt(80) + 10;
+		int exitVel = randGen.nextInt(60) + 10;
+		titleL = "Find the maximum height of the particle:";
+		info1L = "The angle of launch is " + angle + " degrees";
+		info2L = "The exit velocity is " + exitVel + " m/s";
+		info3L = "Assume gravity is 10 m/s";
+		double angleRad = angle * Math.PI / 180;
+		double yVel = Math.sin(angleRad) * answer;
+		time = yVel/10;
+		answer = Double.valueOf(new DecimalFormat("#.##").format((yVel * (time/2) - (4.9 * ((time * time)/4)))));
 	}
 	@Override
 	public void render(float delta) {
@@ -135,8 +198,7 @@ public class ChallengeDisplayScreen implements Screen{
 		batch.draw(background, 0,0);
 		batch.end();
 		stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();  
-		
+        stage.draw();  		
 	}
 
 	@Override
