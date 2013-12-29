@@ -51,8 +51,9 @@ public class ChallengeDisplayScreen implements Screen{
 		testAnswer = new TextButton("Check your answer", s);
 		testAnswer.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		if(Integer.parseInt(input.getText()) > answer - 3 && Integer.parseInt(input.getText()) < answer + 3){
-        			//go to simulator
+        		//could do something like show the answer simulated whether right or not, then give another try if incorrect
+        		if(checkAns(answer, input)){
+        			
         		}
         		return true;
         	}
@@ -78,6 +79,18 @@ public class ChallengeDisplayScreen implements Screen{
 		table.row();
 		table.add(testAnswer).width(150).height(35);
 		stage.addActor(table);
+		
+	}
+	public boolean checkAns(double ans, TextField t){
+		
+		if(!t.getText().matches("-?\\d+(\\.\\d+)?"))
+			//how to say thats not a number, or just say thats not correct
+			return false;
+		
+		if(Integer.parseInt(t.getText()) > ans - 2 && Integer.parseInt(t.getText()) < ans + 2)
+			return true;		
+		else		
+			return false;
 		
 	}
 	public void handleInput(){

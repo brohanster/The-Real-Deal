@@ -100,7 +100,7 @@ public class VariableEnterScreen implements Screen{
         			velocityNotNum.show(stage);
         			return true;
         		}        		
-        		if(Integer.parseInt(velocityField.getText()) > 100 || Integer.parseInt(velocityField.getText()) < 0){
+        		if(Float.parseFloat(velocityField.getText()) > 100 || Float.parseFloat(velocityField.getText()) < 0){
         			velocityNumWrong.show(stage);
         			return true;
         		}

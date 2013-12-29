@@ -108,6 +108,8 @@ public class ChallengeChoiceScreen implements Screen{
 		table.add(heightChoice).height(60).width(250);
 		//table.row();
 		table.add(randomChoice).height(60).width(250);
+		table.row();
+		table.add(backButton).colspan(2).height(60).width(250);
 		stage.addActor(table);
 	}
 	@Override
