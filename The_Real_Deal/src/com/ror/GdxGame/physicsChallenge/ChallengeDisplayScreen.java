@@ -37,6 +37,7 @@ public class ChallengeDisplayScreen implements Screen{
 	SpriteBatch batch;
 	Texture background;
 	public ChallengeDisplayScreen(final GdxGame gam){
+		challengeType = ChallengeChoiceScreen.challengeType;
 		game = gam;
 		randGen = new Random();
 		handleInput();
@@ -94,22 +95,22 @@ public class ChallengeDisplayScreen implements Screen{
 		
 	}
 	public void handleInput(){
-		if(ChallengeChoiceScreen.challengeType == 5){
-			challengeType = randGen.nextInt(3) + 1;
+		if(challengeType == 6){
+			challengeType = (randGen.nextInt(5) + 1);
 		}
-		if(ChallengeChoiceScreen.challengeType == 1||challengeType == 1){
+		if(challengeType == 1){
 			spawnAngleProblem();
 		}
-		if(ChallengeChoiceScreen.challengeType == 2||challengeType == 2){
+		if(challengeType == 2){
 			spawnVelocityProblem();
 		}
-		if(ChallengeChoiceScreen.challengeType == 3||challengeType == 3){
+		if(challengeType == 3){
 			spawnGravityProblem();
 		}
-		if(ChallengeChoiceScreen.challengeType == 4||challengeType == 4){
+		if(challengeType == 4){
 			spawnDistanceProblem();
 		}
-		if(ChallengeChoiceScreen.challengeType == 5||challengeType == 5){
+		if(challengeType == 5){
 			spawnHeightProblem();
 		}
 	}
