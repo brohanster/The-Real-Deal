@@ -23,11 +23,11 @@ public class ChallengeDisplayScreen implements Screen{
 	//i want a different background for this screen/branch
 	final GdxGame game;
 	static int challengeType;//1 = angle, 2 = velocity, 3 = gravity, 4= distance, 5= random
-	double answer;//use a +- of like 5 to accept a variety of answers
+	public static double answer;//use a +- of like 5 to accept a variety of answers
 	Label title, info1, info2, info3, info4, inputLabel;
 	String titleL, info1L, info2L, info3L, info4L;
 	TextField input;
-	int angle, gravity, distance;
+	public static int angle, gravity, distance, exitVel;
 	double time = 0;
 	TextButton testAnswer;
 	Stage stage;
@@ -118,7 +118,7 @@ public class ChallengeDisplayScreen implements Screen{
 		//give exit velocity, 
 		//distance, max height, or 
 		answer = randGen.nextInt(80) + 10;
-		int exitVel = randGen.nextInt(65) + 10;
+		exitVel = randGen.nextInt(65) + 10;
 		gravity = 10;//ease of calculation
 		int variant = randGen.nextInt(2) + 1;
 		titleL = "Find the exit velocity: ";
@@ -168,7 +168,7 @@ public class ChallengeDisplayScreen implements Screen{
 		double temp = randGen.nextDouble()*10;
 		answer = Double.valueOf(new DecimalFormat("#.##").format(temp));
 		//so easiest way to get a good problem would be to give the y value at a given time t, and give velocity and angle
-		int exitVel = randGen.nextInt(40) + 10;
+		exitVel = randGen.nextInt(40) + 10;
 		angle = randGen.nextInt(80) + 10;
 		double angleRad = angle * Math.PI /180;
 		double yVel = exitVel * Math.sin(angleRad);
@@ -182,7 +182,7 @@ public class ChallengeDisplayScreen implements Screen{
 	}
 	public void spawnDistanceProblem(){
 		angle = randGen.nextInt(80) + 10;
-		int exitVel = randGen.nextInt(60) + 10;
+		exitVel = randGen.nextInt(60) + 10;
 		titleL = "Find the distance the particle will go:";
 		info1L = "The angle of launch is " + angle + " degrees";
 		info2L = "The exit velocity is " + exitVel + " m/s";
@@ -196,7 +196,7 @@ public class ChallengeDisplayScreen implements Screen{
 	}
 	public void spawnHeightProblem(){
 		angle = randGen.nextInt(80) + 10;
-		int exitVel = randGen.nextInt(60) + 10;
+		exitVel = randGen.nextInt(60) + 10;
 		titleL = "Find the maximum height of the particle:";
 		info1L = "The angle of launch is " + angle + " degrees";
 		info2L = "The exit velocity is " + exitVel + " m/s";
