@@ -189,7 +189,7 @@ public class ChallengeDisplayScreen implements Screen{
 		info3L = "Assume gravity is 10 m/s";
 		double angleRad = angle * Math.PI / 180;
 		double xVel = exitVel * Math.cos(angleRad);
-		double yVel = Math.sin(angleRad) * answer;
+		double yVel = Math.sin(angleRad) * exitVel;
 		time = yVel/10;
 		answer = Double.valueOf(new DecimalFormat("#.##").format(xVel * time));
 		
@@ -202,7 +202,8 @@ public class ChallengeDisplayScreen implements Screen{
 		info2L = "The exit velocity is " + exitVel + " m/s";
 		info3L = "Assume gravity is 10 m/s";
 		double angleRad = angle * Math.PI / 180;
-		double yVel = Math.sin(angleRad) * answer;
+		double yVel = Math.sin(angleRad) * exitVel;
+		double xVel = Math.cos(angleRad) * exitVel;
 		time = yVel/10;
 		answer = Double.valueOf(new DecimalFormat("#.##").format((yVel * (time/2) - (4.9 * ((time * time)/4)))));
 	}
