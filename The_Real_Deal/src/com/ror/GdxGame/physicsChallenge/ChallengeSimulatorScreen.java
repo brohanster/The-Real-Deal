@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,11 +17,12 @@ import com.ror.GdxGame.GdxGame;
 public class ChallengeSimulatorScreen implements Screen{
 
 	final GdxGame game;
-	float deltaTime, eqTime, velocity, gravity, angle, angleRad, targetX;
+	float deltaTime, eqTime, velocity, gravity, angle, angleRad, targetX, targetY, xVel, yVel;
 	int prevType;
 	Texture projectile, launcher, target;
 	Table table;
 	Stage stage;
+	TextButton start;
 	Label height, distance;
 	Skin s;
 	SpriteBatch batch;	
@@ -31,6 +34,15 @@ public class ChallengeSimulatorScreen implements Screen{
 		s = new Skin(Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
 		table = new Table();
+		height = new Label("", s);//not sure about these labels, once the screen is done ill decide on em
+		distance = new Label("", s);
+		start = new TextButton("Start!",s);
+		start.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		
+        		return true;
+        	}
+        });
 		Gdx.input.setInputProcessor(stage);
 	}
 	public void handleInput(){
@@ -66,19 +78,27 @@ public class ChallengeSimulatorScreen implements Screen{
 			gravity = 10;
 			angle = ChallengeDisplayScreen.angle;
 			angleRad = (float)(angle * Math.PI/180);
+			targetY = (float)ChallengeDisplayScreen.answer;
 		}
+		xVel = velocity * (float)Math.cos(angleRad);
+		yVel = velocity * (float)Math.sin(angleRad);
 	}
 	public float x(float time){
-		
-		return 0;
+		float dist = time*xVel;
+		if(y(time) > 0)
+			distance.setText("Distance: " + (int)dist);
+		return dist;
 	}
 	public float y(float time){
-		
-		return 0;
+		float hei = ((yVel * time) - (0.5f * gravity * (time * time)));
+		if(hei > 0)
+			height.setText("Height: " + (int)hei);		
+		return hei;
 	}
 	@Override
 	public void render(float delta) {
 		eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
+		
 		
 	}
 

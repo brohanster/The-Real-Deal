@@ -25,6 +25,7 @@ public class ChallengeChoiceScreen implements Screen{
 	SpriteBatch batch;
 	Texture background;
 	public static int challengeType;
+	//public static ChallengeDisplayScreen screen;
 	public ChallengeChoiceScreen(final GdxGame gam){
 		game = gam;
 		stage = new Stage();
@@ -36,6 +37,7 @@ public class ChallengeChoiceScreen implements Screen{
 		Texture.setEnforcePotImages(false);
 		background = new Texture(Gdx.files.internal("wallpaper.jpg"));
 		backButton = new TextButton("Back", s);
+		//screen = new ChallengeDisplayScreen(game);
 		backButton.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
         		game.setScreen(new MainMenuScreen(game));

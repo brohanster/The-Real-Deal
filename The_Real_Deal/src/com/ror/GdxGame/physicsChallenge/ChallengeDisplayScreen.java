@@ -1,7 +1,6 @@
 package com.ror.GdxGame.physicsChallenge;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -28,8 +28,9 @@ public class ChallengeDisplayScreen implements Screen{
 	String titleL, info1L, info2L, info3L, info4L;
 	TextField input;
 	public static int angle, gravity, distance, exitVel;
+	Dialog d;
 	double time = 0;
-	TextButton testAnswer;
+	TextButton testAnswer, ok;
 	Stage stage;
 	Table table;
 	Skin s;
@@ -51,14 +52,28 @@ public class ChallengeDisplayScreen implements Screen{
 		input = new TextField("Answer", s);
 		testAnswer = new TextButton("Check your answer", s);
 		testAnswer.addListener(new InputListener(){
-        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){        		
         		//could do something like show the answer simulated whether right or not, then give another try if incorrect
-        		if(checkAns(answer, input)){
-        			
+        		if(input.getText().matches("-?\\d+(\\.\\d+)?")){
+        			game.setScreen(new ChallengeSimulatorScreen(game));
+        		}
+        		else{
+        			d.show(stage);
         		}
         		return true;
         	}
         });
+		d = new Dialog("Please type a number as your answer", s);
+		ok = new TextButton("ok", s);
+		ok.addListener(new InputListener(){
+        	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+        		d.hide();
+        		return true;
+        	}
+        });
+		
+		d.add(ok).width(300);
+		
 		title = new Label(titleL, s);
 		info1 = new Label(info1L, s);
 		info2 = new Label(info2L, s);
