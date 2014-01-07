@@ -23,13 +23,13 @@ public class ChallengeDisplayScreen implements Screen{
 	//i want a different background for this screen/branch
 	final GdxGame game;
 	static int challengeType;//1 = angle, 2 = velocity, 3 = gravity, 4= distance, 5= random
-	public static double answer;//use a +- of like 5 to accept a variety of answers
+	public static double answer, inputAnswer, xVel, yVel, time;//use a +- of like 5 to accept a variety of answers
 	Label title, info1, info2, info3, info4, inputLabel;
 	String titleL, info1L, info2L, info3L, info4L;
 	TextField input;
 	public static int angle, gravity, distance, exitVel;
 	Dialog d;
-	double time = 0;
+	
 	TextButton testAnswer, ok;
 	Stage stage;
 	Table table;
@@ -55,6 +55,7 @@ public class ChallengeDisplayScreen implements Screen{
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){        		
         		//could do something like show the answer simulated whether right or not, then give another try if incorrect
         		if(input.getText().matches("-?\\d+(\\.\\d+)?")){
+        			inputAnswer = answer;
         			game.setScreen(new ChallengeSimulatorScreen(game));
         		}
         		else{
@@ -140,8 +141,8 @@ public class ChallengeDisplayScreen implements Screen{
 		info1L = "The exit velocity is " + exitVel + " m/s";
 		info2L = "Assume gravity is 10 m/s";
 		double angleRad = (answer * Math.PI/180);
-		double xVel = Math.cos(angleRad) * exitVel;
-		double yVel = Math.sin(angleRad) * exitVel;
+		xVel = Math.cos(angleRad) * exitVel;
+		yVel = Math.sin(angleRad) * exitVel;
 		time = yVel/gravity;
 		info4L = "The total time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
 		if(variant == 1){//given distance of flight			
@@ -149,9 +150,10 @@ public class ChallengeDisplayScreen implements Screen{
 			info3L = "The particle distance is " + distance + " meters";
 		}
 		if(variant == 2){//given max height
-			int maxHeight = (int)(yVel * (time/2) - 4.9 * ((time * time)/4));
+			int maxHeight = (int)((yVel * (time/2)) - (4.9 * ((time * time)/4)));
 			info3L = "The particle's max height is " + maxHeight + " meters";
 		}
+		System.out.println(answer);
 	}
 	public void spawnVelocityProblem(){
 		//finding exit velocity
@@ -165,8 +167,8 @@ public class ChallengeDisplayScreen implements Screen{
 		info1L = "The angle is " + angle + " degrees";
 		info2L = "Assume gravity is 10 m/s";
 		double angleRad = (angle * Math.PI/180);
-		double xVel = Math.cos(angleRad) * answer;
-		double yVel = Math.sin(angleRad) * answer;
+		xVel = Math.cos(angleRad) * answer;
+		yVel = Math.sin(angleRad) * answer;
 		time = yVel/gravity;
 		info4L = "The total time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
 		if(variant == 1){//given distance of flight			
@@ -186,8 +188,9 @@ public class ChallengeDisplayScreen implements Screen{
 		exitVel = randGen.nextInt(40) + 10;
 		angle = randGen.nextInt(80) + 10;
 		double angleRad = angle * Math.PI /180;
-		double yVel = exitVel * Math.sin(angleRad);
-		double time = Double.valueOf(new DecimalFormat("#.##").format(randGen.nextDouble() * 3));
+		yVel = exitVel * Math.sin(angleRad);
+		xVel = exitVel * Math.cos(angleRad);
+		time = Double.valueOf(new DecimalFormat("#.##").format(randGen.nextDouble() * 3));
 		double tempY = (yVel * time) + (.5 * answer * (time * time));
 		double y = Double.valueOf(new DecimalFormat("#.##").format(tempY));
 		titleL = "Find the acceleration of gravity: ";
@@ -203,8 +206,8 @@ public class ChallengeDisplayScreen implements Screen{
 		info2L = "The exit velocity is " + exitVel + " m/s";
 		info3L = "Assume gravity is 10 m/s";
 		double angleRad = angle * Math.PI / 180;
-		double xVel = exitVel * Math.cos(angleRad);
-		double yVel = Math.sin(angleRad) * exitVel;
+		xVel = exitVel * Math.cos(angleRad);
+		yVel = Math.sin(angleRad) * exitVel;
 		time = yVel/10;
 		answer = Double.valueOf(new DecimalFormat("#.##").format(xVel * time));
 		
@@ -217,8 +220,8 @@ public class ChallengeDisplayScreen implements Screen{
 		info2L = "The exit velocity is " + exitVel + " m/s";
 		info3L = "Assume gravity is 10 m/s";
 		double angleRad = angle * Math.PI / 180;
-		double yVel = Math.sin(angleRad) * exitVel;
-		double xVel = Math.cos(angleRad) * exitVel;
+		yVel = Math.sin(angleRad) * exitVel;
+		xVel = Math.cos(angleRad) * exitVel;
 		time = yVel/10;
 		answer = Double.valueOf(new DecimalFormat("#.##").format((yVel * (time/2) - (4.9 * ((time * time)/4)))));
 	}

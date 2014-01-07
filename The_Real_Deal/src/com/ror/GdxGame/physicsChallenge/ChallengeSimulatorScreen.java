@@ -28,8 +28,12 @@ public class ChallengeSimulatorScreen implements Screen{
 	SpriteBatch batch;	
 	public ChallengeSimulatorScreen(final GdxGame gam){
 		game = gam;
-		handleInput();
+		targetX = 0;
+		targetY = 0;
+		handleInput();		
 		Texture.setEnforcePotImages(false);
+		projectile = new Texture(Gdx.files.internal("droplet.png"));
+		target = new Texture(Gdx.files.internal("bucket.png"));
 		batch = new SpriteBatch();
 		s = new Skin(Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
@@ -52,19 +56,23 @@ public class ChallengeSimulatorScreen implements Screen{
 			gravity = 10;
 			velocity = ChallengeDisplayScreen.exitVel;
 			angleRad = (float)(angle * Math.PI/180);
+			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time);
 			
 		}
 		if(prevType == 2){
 			velocity = (float) ChallengeDisplayScreen.answer;
+			float inputVel = (float)ChallengeDisplayScreen.inputAnswer;
 			angle = ChallengeDisplayScreen.angle;
 			gravity = 10;
 			angleRad = (float)(angle * Math.PI/180);
+			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time);			
 		}
 		if(prevType == 3){
 			gravity = (float) ChallengeDisplayScreen.answer;
 			angle = ChallengeDisplayScreen.angle;
 			angleRad = (float)(angle * Math.PI/180);
 			velocity = ChallengeDisplayScreen.exitVel;
+			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time);
 		}
 		if(prevType == 4){
 			velocity = (float)ChallengeDisplayScreen.exitVel;
@@ -72,6 +80,7 @@ public class ChallengeSimulatorScreen implements Screen{
 			angle = ChallengeDisplayScreen.angle;
 			angleRad = (float)(angle * Math.PI/180);
 			targetX = (float) ChallengeDisplayScreen.answer;
+			//need to add target y and x in thes
 		}
 		if(prevType == 5){
 			velocity = (float)ChallengeDisplayScreen.exitVel;
@@ -98,6 +107,10 @@ public class ChallengeSimulatorScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
+		batch.begin();
+		batch.draw(projectile, x(eqTime), y(eqTime));
+		batch.draw(target, targetX, targetY);
+		batch.end();
 		
 		
 	}
