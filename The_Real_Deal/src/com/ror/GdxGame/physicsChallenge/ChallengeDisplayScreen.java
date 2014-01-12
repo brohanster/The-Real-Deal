@@ -143,10 +143,11 @@ public class ChallengeDisplayScreen implements Screen{
 		double angleRad = (answer * Math.PI/180);
 		xVel = Math.cos(angleRad) * exitVel;
 		yVel = Math.sin(angleRad) * exitVel;
-		time = yVel/gravity;
+		time = (yVel/gravity);
+		double xTime = time * 2;
 		info4L = "The total time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
 		if(variant == 1){//given distance of flight			
-			distance = (int)(time * xVel);
+			distance = (int)(xTime * xVel);
 			info3L = "The particle distance is " + distance + " meters";
 		}
 		if(variant == 2){//given max height
@@ -170,9 +171,10 @@ public class ChallengeDisplayScreen implements Screen{
 		xVel = Math.cos(angleRad) * answer;
 		yVel = Math.sin(angleRad) * answer;
 		time = yVel/gravity;
+		double xTime = time*2;
 		info4L = "The total time of flight is " + new DecimalFormat("#.##").format(time) + " seconds";
 		if(variant == 1){//given distance of flight			
-			distance = (int)(time * xVel);
+			distance = (int)(xTime * xVel);
 			info3L = "The particle distance is " + distance + " meters";
 		}
 		if(variant == 2){//given max height
@@ -208,7 +210,7 @@ public class ChallengeDisplayScreen implements Screen{
 		double angleRad = angle * Math.PI / 180;
 		xVel = exitVel * Math.cos(angleRad);
 		yVel = Math.sin(angleRad) * exitVel;
-		time = yVel/10;
+		time = (yVel/10)*2;
 		answer = Double.valueOf(new DecimalFormat("#.##").format(xVel * time));
 		
 	}
@@ -227,6 +229,7 @@ public class ChallengeDisplayScreen implements Screen{
 	}
 	@Override
 	public void render(float delta) {
+		
 		batch.begin();
 		batch.draw(background, 0,0);
 		batch.end();

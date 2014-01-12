@@ -141,6 +141,7 @@ public class SimulationScreen implements Screen{
 		else
 			mult = .9f;			
 	}
+	// need to add the mult methods for other planets too
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);

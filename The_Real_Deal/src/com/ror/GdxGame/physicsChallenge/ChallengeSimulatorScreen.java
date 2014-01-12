@@ -2,6 +2,7 @@ package com.ror.GdxGame.physicsChallenge;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,8 +18,9 @@ import com.ror.GdxGame.GdxGame;
 public class ChallengeSimulatorScreen implements Screen{
 
 	final GdxGame game;
-	float deltaTime, eqTime, velocity, gravity, angle, angleRad, targetX, targetY, xVel, yVel;
+	float deltaTime, eqTime, velocity, gravity, angle, angleRad, targetX, targetY, xVel, yVel, mult;
 	int prevType;
+	boolean started = false;
 	Texture projectile, launcher, target;
 	Table table;
 	Stage stage;
@@ -37,16 +39,24 @@ public class ChallengeSimulatorScreen implements Screen{
 		batch = new SpriteBatch();
 		s = new Skin(Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
 		table = new Table();
+		table.setFillParent(true);
 		height = new Label("", s);//not sure about these labels, once the screen is done ill decide on em
 		distance = new Label("", s);
 		start = new TextButton("Start!",s);
 		start.addListener(new InputListener(){
         	public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-        		
+        		deltaTime = TimeUtils.nanoTime();
+        		started = true;
         		return true;
         	}
         });
+		table.top();
+		table.add(start).width(100);
+		table.add(distance).width(100);
+		table.add(height).width(100);
+		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
 	}
 	public void handleInput(){
@@ -56,7 +66,7 @@ public class ChallengeSimulatorScreen implements Screen{
 			gravity = 10;
 			velocity = ChallengeDisplayScreen.exitVel;
 			angleRad = (float)(angle * Math.PI/180);
-			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time);
+			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time*2);
 			
 		}
 		if(prevType == 2){
@@ -65,14 +75,14 @@ public class ChallengeSimulatorScreen implements Screen{
 			angle = ChallengeDisplayScreen.angle;
 			gravity = 10;
 			angleRad = (float)(angle * Math.PI/180);
-			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time);			
+			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time * 2);			
 		}
 		if(prevType == 3){
 			gravity = (float) ChallengeDisplayScreen.answer;
 			angle = ChallengeDisplayScreen.angle;
 			angleRad = (float)(angle * Math.PI/180);
 			velocity = ChallengeDisplayScreen.exitVel;
-			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time);
+			targetX = (float) (ChallengeDisplayScreen.xVel * ChallengeDisplayScreen.time * 2);
 		}
 		if(prevType == 4){
 			velocity = (float)ChallengeDisplayScreen.exitVel;
@@ -91,6 +101,10 @@ public class ChallengeSimulatorScreen implements Screen{
 		}
 		xVel = velocity * (float)Math.cos(angleRad);
 		yVel = velocity * (float)Math.sin(angleRad);
+		System.out.println(angle + "," + velocity + "," + targetX);
+		findMult();
+		targetX*=mult;
+		targetY*=mult;
 	}
 	public float x(float time){
 		float dist = time*xVel;
@@ -104,14 +118,31 @@ public class ChallengeSimulatorScreen implements Screen{
 			height.setText("Height: " + (int)hei);		
 		return hei;
 	}
+	public void findMult(){
+		if(velocity <= 10)
+			mult = 60f;
+		else if(velocity > 10 && velocity <= 20)
+			mult = 20f;
+		else if(velocity > 20 && velocity <= 40)
+			mult = 5f;
+		else if(velocity > 40 && velocity <= 80)
+			mult = 1.1f;
+		else
+			mult = .9f;			
+	}
 	@Override
 	public void render(float delta) {
+		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		eqTime = (TimeUtils.nanoTime() - deltaTime)/1000000000;
 		batch.begin();
-		batch.draw(projectile, x(eqTime), y(eqTime));
+		if(started)
+			if(y(eqTime)>0)
+				batch.draw(projectile, mult * x(eqTime), mult * y(eqTime));
 		batch.draw(target, targetX, targetY);
 		batch.end();
-		
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
 		
 	}
 
